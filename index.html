@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>André Tabarra</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- Hello there, curious little one... -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 10%;
+            background-color: #ffe054;
+
+            font-family: 'Roboto Mono', monospace;
+            color: #242e2e;
+            font-size: 1.32em;
+            font-weight: 500;
+
+            opacity: 0;
+            transition: opacity 2s;
+            -webkit-transition: opacity 2s;
+        }
+
+        .container {
+            width: 380px;
+            text-align: center;
+            border: 3px dashed #242e2e;
+            padding: 25px;
+        }
+
+        h1 {
+            margin-block-end: 0.47em;
+        }
+
+        h6 {
+            margin-block-start: 1.4em;
+        }
+
+        a {
+            color: #242e2e;
+            font-size: 18px;
+            padding: 6px;
+        }
+
+        a:hover {
+            background-color: #fcd676;
+        }
+
+        #bigMessage {
+            display: none;
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            background-color: #fcd676;
+
+            opacity: 0;
+            transition: opacity 1s;
+            -webkit-transition: opacity 1s;
+        }
+
+        #bigMessageCenter {
+            text-align: center;
+            margin: auto;
+            margin-top: 25vh;
+        }
+
+        code {
+            font-weight: bolder;
+            padding: 2px;
+            background-color: #ffce51;
+        }
+    </style>
+</head>
+
+<body onload="document.body.style.opacity='1'">
+    <div id="bigMessage">
+        <div id="bigMessageCenter">
+            <h1 id="bigMessageEmail">loading...</h1>
+            <small>press <code>CTRL+C</code> to copy, <code>ESC</code> to go back</small>
+        </div>
+    </div>
+    <div class="container">
+        <h1>André Tabarra</h1>
+        <h6>Cloud Architecture &middot; Information Security &middot; Software Development</h6>
+        <a href="#" id="btn-contact">Contact</a>
+        <a href="https://github.com/tabarra" target="_blank">GitHub</a>
+    </div>
+
+    <script>
+        //Trying to prevent spam
+        const email = atob('YW5kcmVAdGFiYXJyYS5jb20uYnI=');
+        const bigMessage = document.getElementById('bigMessage');
+        const bigMessageEmail = document.getElementById('bigMessageEmail');
+
+        //Handle esc/ctrl+c
+        document.onkeydown = (e) => {
+            if (bigMessage.style.opacity == 0) {
+                return;
+            }
+
+            const ctrlDown = e.ctrlKey || e.metaKey;
+            if (e.key === "Escape") {
+                bigMessage.style.opacity = 0;
+                setTimeout(() => {
+                    bigMessage.style.display = 'none';
+                }, 1000);
+            } else if (ctrlDown && e.key == 'c') {
+                bigMessageEmail.innerHTML = `${email}&check;`;
+                copyTextToClipboard(email);
+            }
+        };
+
+        document.getElementById('btn-contact').onclick = (e) => {
+            bigMessageEmail.innerText = email;
+            bigMessage.style.display = 'block';
+            bigMessage.style.opacity = 0;
+            setTimeout(() => {
+                bigMessage.style.opacity = 1;
+            }, 0);
+        };
+
+        //Copypasted from stackoverflow
+        function fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + msg);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+        function copyTextToClipboard(text) {
+            if (!navigator.clipboard) {
+                fallbackCopyTextToClipboard(text);
+                return;
+            }
+            navigator.clipboard.writeText(text).then(function () {
+                console.log('Async: Copying to clipboard was successful!');
+            }, function (err) {
+                console.error('Async: Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+
+</html>
